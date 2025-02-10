@@ -2,10 +2,7 @@ openapi: 3.1.0
 info:
   title: Morphais External API
   version: "1.0.0"
-  description: |
-    This API provides access to Morphais startup data. Two credentials must be provided in the request headers:
-    - **morphaisemail:** Your Morphais account email.
-    - **morphaiskey:** The API key generated from the dashboard.
+  description: This API provides access to Morphais startup data.
 servers:
   - url: https://backend-prod.morphais.de/api/external-api
 components:
@@ -190,6 +187,7 @@ components:
           type: string
           description: Name of the company where the experience was gained.
         experience_founder:
+          # TODO: Change to boolean
           type: integer
           description: Indicator if the person is a founder (0 or 1).
         role:
@@ -253,22 +251,23 @@ paths:
           name: date
           schema:
             type: string
-            pattern: "^[0-9]{2}-[0-9]{2}-[0-9]{4}$"
-          description: |
-            Select startups with a date greater than or equal to the specified date.
-            **Format:** DD-MM-YYYY (e.g. `10-10-2023`)
+            format: date
+            example: 2022-01-30
+          description: Select startups with a date greater than or equal to the specified date.
         - in: query
           name: page
           schema:
-            type: string
-            default: "1"
+            type: integer
+            default: 1
           description: Select the page number (pagination as on the dashboard).
         - in: query
           name: take
           schema:
-            type: string
-            default: "50"
-          description: Specify how many startups to display (max 50).
+            type: integer
+            default: 50
+            minimum: 1
+            maximum: 50
+          description: Specify how many startups to display.
         - in: query
           name: education
           schema:
@@ -282,24 +281,39 @@ paths:
         - in: query
           name: industries
           schema:
-            type: string
+            type: array
+            items:
+              type: string
+            example: ["Audiotech", "Beauty", "IoT"]
+          style: form
+          explode: false
           description: |
-            Filter on industry type. Accepts a comma-separated list of industries. **Case-sensitive.
-            ** Example: `Audiotech,Beauty,IoT`
+            Filter on industry type. Accepts a comma-separated list of industries.
+            **Case-sensitive.**
         - in: query
           name: solutions
           schema:
-            type: string
+            type: array
+            items:
+              type: string
+            example: ["3D printing", "App"]
+          style: form
+          explode: false
           description: |
-            Filter on solution type. Accepts a comma-separated list of solutions. **Case-sensitive.
-            ** Example: `3D printing,App`
+            Filter on solution type. Accepts a comma-separated list of solutions.
+            **Case-sensitive.**
         - in: query
           name: highlights
           schema:
-            type: string
+            type: array
+            items:
+              type: string
+            example: ["Top University", "PhD"]
+          style: form
+          explode: false
           description: |
-            Filter on founder highlights. Accepts a comma-separated list. **Case-sensitive.
-            ** Example: `Top University,PhD`
+            Filter on founder highlights. Accepts a comma-separated list.
+            **Case-sensitive.**
       responses:
         "200":
           description: Successful response. Returns an array of startup list items.
