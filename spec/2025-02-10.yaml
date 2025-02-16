@@ -27,7 +27,7 @@ components:
           format: uuid
           description: Unique identifier for the startup.
         name:
-          type: string
+          type: [string, "null"]
           description: Name of the startup.
         desc_short:
           type: [string, "null"]
