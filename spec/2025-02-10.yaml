@@ -345,6 +345,16 @@ paths:
                   $ref: "#/components/schemas/StartupListItem"
         "400":
           description: Bad Request
+        "404":
+          description: No startups available.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "There are no startups available."
   /startup:
     get:
       summary: Get startup details
